@@ -1,5 +1,5 @@
 /*eslint-disable*/
-import React from "react";
+import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { NavLink, useLocation } from "react-router-dom";
@@ -16,10 +16,26 @@ import AdminNavbarLinks from "components/Navbars/AdminNavbarLinks.js";
 import RTLNavbarLinks from "components/Navbars/RTLNavbarLinks.js";
 
 import styles from "assets/jss/material-dashboard-react/components/sidebarStyle.js";
-
+import { useDispatch, useSelector } from "react-redux";
 const useStyles = makeStyles(styles);
 
 export default function Sidebar(props) {
+  const dispatch = useDispatch();
+  const { user: currentUser } = useSelector((state) => state.auth);
+  const [unAuthoratedUser, setUnAuthoratedUser] = useState(null) ;
+  const list = ['/chat', '/icons', '/typography'];
+
+  let routesList = currentUser? props.routes : props.routes.filter((item) => list.indexOf(item.path) == -1);
+
+  // const filterRoutes = () => {
+  //   if(currentUser){
+  //     setUnAuthoratedUser(false);
+  //   }
+  //   else{
+  //       routesList =  routesList.filter((item) => list.indexOf(item.path) == -1);   
+  //   }
+  // }
+console.log('props', props);
   const classes = useStyles();
   let location = useLocation();
   // verifies if routeName is the one active (in browser input)
@@ -27,9 +43,13 @@ export default function Sidebar(props) {
     return location.pathname === routeName;
   }
   const { color, logo, image, logoText, routes } = props;
-  var links = (
+  // var unAuthratedUser =  
+
+  var links = 
+  (<>
+    
     <List  className={classes.list}>
-      {routes.map((prop, key) => {
+      {routesList.map((prop, key) => {
         var activePro = " ";
         var listItemClasses;
         if (prop.path === "/upgrade-to-pro") {
@@ -52,7 +72,8 @@ export default function Sidebar(props) {
             activeClassName="active"
             key={key}
           >
-            <ListItem button className={classes.itemLink + listItemClasses}>
+      {/* {currentUser && props.path == '/chat' &&  */}
+      <ListItem button className={classes.itemLink + listItemClasses}>
               {typeof prop.icon === "string" ? (
                 <Icon
                   className={classNames(classes.itemIcon, whiteFontClasses, {
@@ -76,10 +97,14 @@ export default function Sidebar(props) {
                 disableTypography={true}
               />
             </ListItem>
+      
+      {/* } */}
           </NavLink>
         );
-      })}
+      })
+      }
     </List>
+  </>
   );
   var brand = (
     <div className={classes.logo}>

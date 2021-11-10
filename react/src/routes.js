@@ -37,8 +37,10 @@ import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
 import WelcomeScreen from "views/Chat/WelcomeScreen";
+import { Login } from "views/Login/Login";
 
 const dashboardRoutes = [
+
   {
     path: "/chat",
     name: "",
@@ -47,6 +49,7 @@ const dashboardRoutes = [
     component: ChatScreen,
     layout: "/admin",
   },
+
   {
     path: "/dashboard",
     name: "בית",
@@ -94,7 +97,7 @@ const dashboardRoutes = [
     icon: BubbleChart,
     component: Icons,
     layout: "/admin",
-  }
+  },
   // {
   //   path: "/maps",
   //   name: "Maps",
@@ -127,6 +130,14 @@ const dashboardRoutes = [
   //   component: UpgradeToPro,
   //   layout: "/admin",
   // }
+  {
+    path: "/login",
+    name: "",
+    rtlName:"",
+    icon: "",
+    component: Login,
+    layout: "/admin",
+  }
 
 ];
 

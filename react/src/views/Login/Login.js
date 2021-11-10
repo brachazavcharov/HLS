@@ -20,7 +20,9 @@ import { Form, Checkbox, Label } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { getAllCustomers, postCustomer } from "../../actions/customer";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 
+import { login } from "../../actions/auth";
 
 const styles = {
   cardCategoryWhite: {
@@ -104,6 +106,9 @@ export function Login(props) {
   const [x, setX] = useState(false);
   const [k, setK] = useState(false);
   const [z, setZ] = useState(false);
+
+  
+  const dispatch = useDispatch();
   useEffect(() => {
     lastName.length < 2 ? setLastNameValid(false) : setLastNameValid(true);
     firstName.length < 2 ? setFirstNameValid(false) : setFirstNameValid(true);
@@ -153,9 +158,19 @@ export function Login(props) {
       //אם יש לקוח בעל אותו מייל
       //צריך להציג לו הודעה שהמשתמש קיים במערכתהמשתמש
       console.log("שם  כבר קיים במערכת");
+     // localStorage.setItem("user", JSON.stringify(response.data));
+
     }
   }, [email])
-
+  const handleLogin = () => {
+    dispatch(login(mail))
+      .then((res) => {
+        console.log('res', res);
+      })
+  };
+  const logout = () => {
+    localStorage.removeItem("user");
+  };
   const submit1 = () => {
 
     //לוקח את כל הלקוחות ומסנן רק את המיילים ששוים למייל שהלקוח הכניס
@@ -172,18 +187,21 @@ export function Login(props) {
       });
   }
   const submit2 = () => {
-    axios.get("http://localhost:5000/customer")
-      .then(res => {
-        setEmail(res.data.find(c => c.mail == mail && c.password == password));
-        if (email) {
-          setX(true);
-          setY(false);
-        }
-        else {
-          setY(true);
-          setX(false);
-        }
-      });
+
+    // axios.get("http://localhost:5000/customer")
+    //   .then(res => {
+    //     setEmail(res.data.find(c => c.mail == mail && c.password == password));
+    //     if (email) {
+    //       setX(true);
+    //       setY(false);
+    //       dispatch(login({mail, password}))
+
+    //     }
+    //     else {
+    //       setY(true);
+    //       setX(false);
+    //     }
+    //   });
   }
   const signIn = () => {
     setLog(true);
@@ -254,7 +272,7 @@ export function Login(props) {
                   </GridItem>
                   <CardFooter>
                     {/* צריך לראות איך רואים את הליבל רק אם חוזר לי אמת מהפונקציה איך עושים? */}
-                    <Button color="primary" onClick={() => { submit2() }}>אישור</Button>
+                    <Button color="primary" onClick={() => { handleLogin() }}>אישור</Button>
 
                   </CardFooter>
                 </GridContainer>

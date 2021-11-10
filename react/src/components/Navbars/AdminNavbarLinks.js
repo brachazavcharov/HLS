@@ -1,5 +1,6 @@
-import React,{useState} from "react";
+import React,{useEffect, useState} from "react";
 import classNames from "classnames";
+import { useDispatch, useSelector } from "react-redux";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -21,14 +22,17 @@ import Button from "components/CustomButtons/Button.js";
 import { Redirect } from 'react-router-dom';
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 import Login from '../../views/Login/Login';
+
 const useStyles = makeStyles(styles);
 
 export default function AdminNavbarLinks() {
   const classes = useStyles();
-  const [redirect, setRedirect] = useState(null);
+  const [redirect, setRedirect] = useState(false);
   const [openNotification, setOpenNotification] = React.useState(null);
   const [openProfile, setOpenProfile] = React.useState(null);
-  
+  const dispatch = useDispatch();
+  const { user: currentUser } = useSelector((state) => state.auth);
+
   const handleClickNotification = (event) => {
     if (openNotification && openNotification.contains(event.target)) {
       setOpenNotification(null);
@@ -47,22 +51,17 @@ export default function AdminNavbarLinks() {
     }
   };
   const handleLogin = () =>{
-    setRedirect(true);
-    localStorage.setItem('IsLogged', true);
+    //setRedirect(true);
   }
   const handleCloseProfile = () => {
     setOpenProfile(null);
   };
-  // if(redirect == true){
-
-  //   return <Redirect to="/login" />
-  // }
-  // else
+//redirect == true? <Redirect to="/login"/>:
   return (
     
     <div>
       <div className={classes.searchWrapper}>
-        {redirect == true && <Login />}
+
         <CustomInput
           formControlProps={{
             className: classes.margin + " " + classes.search,
@@ -109,7 +108,7 @@ export default function AdminNavbarLinks() {
             </p>
           </Hidden>
         </Button>
-       {redirect != true && <Poppers
+     <Poppers
           open={Boolean(openNotification)}
           anchorEl={openNotification}
           transition
@@ -168,8 +167,7 @@ export default function AdminNavbarLinks() {
             </Grow>
           )}
         </Poppers>
-}
-      </div>
+  </div>
       <div className={classes.manager}>
         <Button
           color={window.innerWidth > 959 ? "transparent" : "white"}

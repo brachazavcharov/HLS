@@ -7,3 +7,5 @@ export { publicChatReducer } from './publicChat';
 export { recipeRecipe } from './recipe';
 export { recommendedProductsReducer } from './recommendedProducts';
 // export default{competitionFilesReducer,CustomerReducer,orderReducer,PersonalChatReducer,ProductReducer,PublicChatReducer,recipeRecipe,RecommendedProductsReducer};
+export { auth } from './auth';
+export { message } from './message';

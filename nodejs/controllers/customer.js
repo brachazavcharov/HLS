@@ -5,8 +5,18 @@ const getAll = async (req, res) => {
     return res.send(customers);
 }
 const getById = async (req, res) => {
+    console.log('come2');
     let { id } = req.params;
     let customer = await Customer.findById(id);
+    if (!customer)
+        return res.status(404).send("There is no such customer");
+    return res.send(customer);
+}
+
+const getByMail = async (req, res) => {
+    console.log('comee');
+    let  currentMail  = req.params.mail;
+    let customer = await Customer.find( { mail: currentMail } );
     if (!customer)
         return res.status(404).send("There is no such customer");
     return res.send(customer);
@@ -64,5 +74,5 @@ const deleteCustomer = async (req, res) => {
     return res.send(deleted);
 }
 module.exports = {
-    getAll, getById, postCustomer, updateCustomer, deleteCustomer
+    getAll, getById, postCustomer, updateCustomer, deleteCustomer, getByMail
 }

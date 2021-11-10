@@ -1,4 +1,5 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Switch, Route, Redirect } from "react-router-dom";
 // creates a beautiful scrollbar
 import PerfectScrollbar from "perfect-scrollbar";
@@ -30,7 +31,7 @@ const switchRoutes = (
             component={prop.component}
             key={key}
           />
-          
+
         );
       }
       return null;
@@ -44,6 +45,7 @@ const useStyles = makeStyles(styles);
 
 export default function Admin({ ...rest }) {
   // styles
+  //const { user: currentUser } = useSelector((state) => state.auth);
   const classes = useStyles();
   // ref to help us initialize PerfectScrollbar on windows devices
   const mainPanel = React.createRef();
@@ -118,17 +120,20 @@ export default function Admin({ ...rest }) {
             <div className={classes.container}>{switchRoutes}</div>
           </div>
         ) : (
-          <div className={classes.map}>{switchRoutes}</div>
+          <div >{switchRoutes}</div>
         )}
+        {/* { <div className={classes.content}>
+          <div className={classes.container}>{switchRoutes}</div>
+        </div>} */}
         {getRoute() ? <Footer /> : null}
-        <FixedPlugin
+        {/* <FixedPlugin
           handleImageClick={handleImageClick}
           handleColorClick={handleColorClick}
           bgColor={color}
           bgImage={image}
           handleFixedClick={handleFixedClick}
           fixedClasses={fixedClasses}
-        />
+        /> */}
       </div>
     </div>
   );

@@ -27,13 +27,14 @@ import 'semantic-ui-css/semantic.min.css'
 import "assets/css/material-dashboard-react.scss?v=1.10.0";
 import { Provider } from 'react-redux'
 // import reducer from "./reducers/customer";
-import { customerReducer, productReducer, competitionFilesReducer, orderReducer, recipeRecipe, recommendedProductsReducer } from "./reducers/index";
+import { customerReducer, productReducer,auth,message,
+   competitionFilesReducer, orderReducer, recipeRecipe, recommendedProductsReducer } from "./reducers/index";
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import Login from "views/Login/Login";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const myStore = createStore(combineReducers({ customerReducer: customerReducer, productReducer: productReducer }),
+const myStore = createStore(combineReducers({ customerReducer: customerReducer, productReducer: productReducer, auth: auth }),
   composeEnhancers(
     applyMiddleware(thunk))
 );
