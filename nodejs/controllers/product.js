@@ -1,4 +1,6 @@
 const Product = require("../models/product");
+const RecommendedProducts = require("../models/recommendedProducts");
+
 const getAll = async (req, res) => {
     let products = await Product.find();
     return res.send(products);
@@ -12,9 +14,9 @@ const getById = async (req, res) => {
 }
 const postProduct = async (req, res) => {
     let product = req.body;
-    const url1 = req.protocol + '://' + req.get('host');
+    // const url1 = req.protocol + '://' + req.get('host');
     let newProduct = new Product(product);
-    newProduct.img = url1 + '/uploads/' + req.file.filename;
+    // newProduct.img = url1 + '/uploads/' + req.file.filename;
     try {
         await newProduct.save();
         return res.send(newProduct);
@@ -46,8 +48,8 @@ const deleteProduct = async (req, res) => {
     let deleted = await Product.findByIdAndRemove(id);
     if (!deleted)
         return res.status(404).send("There is no such product");
-    return res.send(deleted);
-
+    RecommendedProducts.findOneAndDelete({productId:id})
+    .then(r=> {return res.send(deleted)})
 }
 module.exports = {
     getAll, getById, postProduct, deleteProduct, updateProduct

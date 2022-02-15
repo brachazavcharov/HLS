@@ -91,11 +91,9 @@ export default function UpgradeToPro() {
         <Card>
           <CardHeader color="info">
             <h4 className={classes.cardTitleWhite}>
-              Material Dashboard PRO React
             </h4>
             <p className={classes.cardCategoryWhite}>
-              Are you looking for more components? Please check our Premium
-              Version of Material Dashboard Angular.
+           
             </p>
           </CardHeader>
           <CardBody>

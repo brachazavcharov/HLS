@@ -24,6 +24,9 @@ import LocationOn from "@material-ui/icons/LocationOn";
 import Notifications from "@material-ui/icons/Notifications";
 import Unarchive from "@material-ui/icons/Unarchive";
 import Language from "@material-ui/icons/Language";
+import AddShoppingCartSharpIcon from '@material-ui/icons/AddShoppingCartSharp';
+import HomeSharpIcon from '@material-ui/icons/HomeSharp';
+import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
@@ -55,7 +58,7 @@ const dashboardRoutes = [
     path: "/dashboard",
     name: "בית",
     rtlName: "لوحة القيادة",
-    icon: Dashboard,
+    icon: HomeSharpIcon,
     component: DashboardPage,
     layout: "/admin",
     auth:"abc"
@@ -65,7 +68,7 @@ const dashboardRoutes = [
     // path: "/welcome/:email/:room",
     name: "צאט",
     rtlName: "لوحة القيادة",
-    icon: Dashboard,
+    icon: WhatsAppIcon,
     component: WelcomeScreen,
     layout: "/admin",
     auth:"ab"
@@ -83,7 +86,7 @@ const dashboardRoutes = [
     path: "/table",
     name: "מוצרים",
     rtlName: "قائمة الجدول",
-    icon: "content_paste",
+    icon: AddShoppingCartSharpIcon,
     component: TableList,
     layout: "/admin",
     auth:"abc"
@@ -108,7 +111,7 @@ const dashboardRoutes = [
   },
   {
     path: "/orders",
-    name: "הזמנות",
+    name: "פרטי לקוחות",
     rtlName: "الرموز",
     icon: LibraryBooks,
     component: Guide,

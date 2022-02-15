@@ -160,7 +160,7 @@ function TypographyPage(props) {
             props.arr ?
             arrSelected?.map(i => {
                 return (
-                  [<input onClick={() => delateSelected(i._id)} type="button" value="הסר מהסל" />, i.description, i.name,<input type='number' defaultValue="1" min="1" max="5" onChange={(e)=>{i.quantity=e.target.value}}/>, <img src={i.img} />]
+                  [<Button onClick={() => delateSelected(i._id)} type="button"  color="primary">הסר מהסל</Button>, i.description, i.name,<input type='number' defaultValue="1" min="1" max="5" onChange={(e)=>{i.quantity=e.target.value}}/>, <img src={i.img} />]
                 )
               }) : null} />
      <Button color="primary" onClick={() => { submit1() }}>שלח הזמנה למדריכה</Button>

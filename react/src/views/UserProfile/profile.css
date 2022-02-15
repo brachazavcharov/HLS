@@ -1,0 +1,22 @@
+.bmi{
+    /* margin-top: -400pt !important; */
+    margin-right: 30pt;
+}
+.orders{
+    margin-top: -400pt !important;
+
+}
+canvas.react-pdf__Page__canvas{
+    border: solid 1px black;
+    width: 285pt !important;
+    background-color: black;
+    height: 200pt;
+}
+.weight{
+    margin-right: 320pt;
+    margin-top: -400pt;
+    padding-left: 100pt;
+}
+.in_line{
+    display: flex;
+}

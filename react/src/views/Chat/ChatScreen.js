@@ -16,6 +16,8 @@ import { Send } from "@material-ui/icons";
 import axios from "axios";
 import ChatItem from "./ChatItem";
 import MainChat from './MainChat'
+import PrivatChat from './privatChat'
+
 const Chat = require("twilio-chat");
 class ChatScreen extends React.Component {
     constructor(props) {
@@ -41,7 +43,7 @@ class ChatScreen extends React.Component {
         }
 
         this.setState({ loading: true });
-
+        console.log(room)
         try {
             token = await this.getToken(email);
         } catch {
@@ -78,7 +80,7 @@ class ChatScreen extends React.Component {
             }
         }
     }
-    
+
     sendMessage = () => {
         const { text, channel } = this.state;
         if (text) {
@@ -134,10 +136,14 @@ class ChatScreen extends React.Component {
                     <CircularProgress style={{ color: "white" }} />
                 </Backdrop>
 
-                <AppBar elevation={10}>
-                    <Toolbar>
+                <AppBar  elevation={10}>
+                    <Toolbar  className="chat">
                         <Typography variant="h6">
-                            {`Room: ${room}, User: ${email}`}
+                            {room == 'main' ? <>
+                                {`Room: צ'אט קבוצתי, User: ${email}`}</> :
+                                // <><h3>צ'אט עם:</h3><PrivateChat id={room}></PrivateChat></>}
+                                <>{`Room: צ'אט פרטי, User: ${email}`}</>}
+                            {/* {`Room: ${room}, User: ${email}`}  */}
                         </Typography>
                     </Toolbar>
                 </AppBar>
@@ -188,8 +194,8 @@ class ChatScreen extends React.Component {
                             </Grid>
                         </Grid>
                     </Grid>
-                    {room!='main'?
-                    <Grid><MainChat></MainChat></Grid>:null}
+                    {room != 'main' ?
+                        <Grid><MainChat></MainChat></Grid> : <Grid><PrivatChat></PrivatChat></Grid>}
                 </Grid>
             </Container>
         );

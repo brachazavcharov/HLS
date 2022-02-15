@@ -15,6 +15,7 @@ import ChartistGraph from "react-chartist";
 import { makeStyles } from "@material-ui/core/styles";
 import styles1 from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 import { ImWink } from "react-icons/im";
+import { Button } from 'semantic-ui-react';
 // import { Bu } from 'components/CustomButtons/Button';
 
 const styles = {
@@ -57,6 +58,7 @@ const [arrWeight,setArrWeight]= useState([])
 const [gift,setGift]= useState()
 const [isChoose,setIsChoose]= useState(false)
 const [competition,setCompetition]= useState([])
+const [addP,setAddP]= useState(false)
 const classes = useStyles();
 
 useEffect(() => {
@@ -73,16 +75,23 @@ axios.get('http://localhost:5000/CompetitionFiles').then(succ => {
   .catch(e => { console.log(e.message)})
 }, [])
 
-function initArr(customerArr){
- debugger
- //WeightLoss:
- let weightArr = customerArr?.map(x=>{return {WeightLoss:x.customerWeights[x.customerWeights?.length-8]?.currentWeight-x.customerWeights[x.customerWeights?.length-1]?.currentWeight,name:x.name+" "+x.lastName}})
+function initArr(customerArr){//  הפונקציה עוברת על מערך המשקלים של הלקוחות ,בלי המדריכה
+  // על מנת להציג את הספקי הירידה במשקל המשתמשים בדיאגרמה
+ customerArr=customerArr?.filter(x => x.mail !== data.customerReducer.AdminEmail)
+ let weightArr = customerArr?.map(x=>
+  {
+    if(x.customerWeights?.length>7)
+    return {WeightLoss:x.customerWeights[x.customerWeights?.length-8]?.currentWeight-x
+      .customerWeights[x.customerWeights?.length-1]?.currentWeight,name:x.name+" "+x.lastName}
+   else
+   return {WeightLoss:x.customerWeights[0]?.currentWeight-x.
+    customerWeights[x.customerWeights?.length-1]?.currentWeight,name:x.name+" "+x.lastName
+  }})
  weightArr=weightArr?.filter(x=>!isNaN(x.WeightLoss))
  weightArr?.sort((a,b)=>a.WeightLoss - b.WeightLoss)
-  console.log(weightArr)
   setArrWeight(weightArr)
-  debugger
 }
+
 var delays = 80,
   durations = 500;
 
@@ -104,6 +113,8 @@ var delays = 80,
   .then(function (response) {
     console.log(JSON.stringify(response.data));
     setCompetition(response.data)
+    setAddP(false)
+    setIsChoose(false)
   })
   .catch(function (error) {
     console.log(error);
@@ -161,18 +172,19 @@ const competitionChart = {
     },
   },
 };
-function chooseGift(){
+function chooseGift(e){
 debugger
+e.preventDefault();
 let giftobj = {}
-giftobj.name = 'abcdefgh',
+giftobj.name = e.target.name.value || 'תחרות שבועית',
 giftobj.date = new Date()
-giftobj.details ="abcdefgh"
+giftobj.details = e.target.details.value || 'ירידה מירבית במשקל',
 giftobj.prize = data?.productReducer?.productArr?.find(x=>x._id == gift)?.name
 // giftobj.winningRecipeId = 'c'
-giftobj.endDate= 1
+giftobj.endDate= e.target.endDate.value || new Date()+7,
 
 axios.post('http://localhost:5000/CompetitionFiles',giftobj)
-.then(r=>console.log(r.data))
+.then(r=>{setCompetition(r.data)})
 .catch(err=>console.log(err))
 }
 
@@ -211,9 +223,10 @@ return (
   </GridItem>
   <GridItem>
     <div>
-  {data?.customerReducer?.userAuth=='a'&&competition?.isEnded?<ul>
-  <h2>הכנס פרטי תחרות</h2>
-  <h3>בחר מוצר מתנה לתחרות השבועית</h3>
+  {data?.customerReducer?.userAuth=='a'&&competition?.isEnded?<>
+   {addP==false?<Button color="purple" onClick={()=>setAddP(true)}>הוסף תחרות חדשה</Button>:null}
+   {addP==true?<>
+  <h4>בחר מוצר מתנה לתחרות</h4><ul>
    {data?.productReducer?.productArr?.map((item,key)=>(
      <GridItem lg={3} key={key}>
        <li >
@@ -222,22 +235,34 @@ return (
         <input type="checkbox" disabled={isChoose&&gift!=item._id?true:false} onClick={(e)=>
         {if(e.target.checked){setGift(item._id)
           setIsChoose(true)}
-          else setIsChoose(false)}}></input></li>
+          else {setIsChoose(false),setGift(null)}}}></input></li>
      </GridItem>
    ))
-   }<button color='google plus' disabled={!isChoose} onClick={()=>chooseGift()}>אישור</button></ul>:null}
+   }</ul>
+   <form onSubmit={(e)=>chooseGift(e)}> 
+   <h4>הכנס פרטים</h4>
+   <input type='text' id='name' placeholder='הכנס שם תחרות'></input>
+   <input type='text' id='details' placeholder='הכנס פרטי תחרות'></input>
+   <input type='date' id='endDate' placeholder='הכנס תאריך סיום '></input>
+   <Button color='google plus' color="purple" disabled={!isChoose}>אישור</Button>
+   </form></>:null}
+   </>:null}
      {data?.customerReducer?.userAuth=='a'&&competition?.isEnded==false?
-     <button onClick={()=>finishCompetition()}>הכרז על סיום תחרות</button>:null}
+     <Button color="purple" onClick={()=>finishCompetition()}>הכרז על סיום תחרות</Button>:null}
      </div>
    </GridItem>
-   {competition&&data?.customerReducer?.userAuth!='a'?<>
+   {competition?.isEnded==false||data?.customerReducer?.userAuth!='a'&&competition?.isEnded?<>
    <GridItem>
   <h2>מתנה</h2>
   <h1>{competition.prize}</h1>
   <img src={data?.productReducer?.productArr?.find(x=>x.name==competition.prize)?.img} width='200px'></img>
    </GridItem>
- {competition?.isEnded==false?<GridItem><h2>סיום התחרות: {new Date(competition?.endDate).toUTCString()}</h2></GridItem>:null}
    </>:null}
+   {competition?.isEnded==false?<GridItem>
+     <h3>{competition?.name}</h3>
+     <h3>פרטי התחרות: {competition?.details}</h3>
+     <h3>תאריך סיום: {new Date(competition?.endDate).toLocaleDateString()}</h3>
+     </GridItem>:null}
   </GridContainer>
  </>
 )

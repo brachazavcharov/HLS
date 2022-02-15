@@ -135,100 +135,77 @@ export function Login(props) {
   //     setX(false);
   //   }, 3000);
   // },[])
-  useEffect(() => {
-    if (email == false || !email || email == null || email == undefined) {
-      if (firstNameValid && lastNameValid && phoneValid && mailValid && passwordValid && heightValid && weightValid && ageValid && pelvisValid && waistValid && chestValid && cityValid && genderValid) {
-        let customer = {
-          name: firstName,
-          lastName: lastName,
-          city: city,
-          mail: mail,
-          height: height,
-          gender: gender,
-          phone: phone,
-          password: password,
-          chest: chest,
-          waist: waist,
-          pelvis: pelvis,
-          customerWeights: customerWeights,
-          joinDate: joinDate
-        };
-        //props.postCustomer(customer);
-        axios.post("http://localhost:5000/customer", customer)
-          .then(res =>{
-              console.log("שם  המשתמש נכנס למערכת");
-              localStorage.setItem('CurrentUser',JSON.stringify(res.data))
-              console.log(localStorage.getItem('CurrentUser')) 
-              if(res.data.mail==data.AdminEmail)
-              localStorage.setItem('Auth','a')
-              else
-              localStorage.setItem('Auth','b')
-              dispatch(updateAuth(localStorage.getItem('Auth')))
-              dispatch(updateCurrentUser(currentuser))
-              console.log(data.currentUser)
-              setIslogin(true)
-          }
-            ); 
-      }
-    } else {
-      //אם יש לקוח בעל אותו מייל
-      //צריך להציג לו הודעה שהמשתמש קיים במערכתהמשתמש
-      console.log("שם  כבר קיים במערכת");
-    }
-  }, [email])
+
+
 
   const submit1 = () => {
-
     //לוקח את כל הלקוחות ומסנן רק את המיילים ששוים למייל שהלקוח הכניס
     axios.get("http://localhost:5000/customer")
-      .then(res => {
+      .then(async res => {
         debugger
         let currentuser = res.data.find(c => c.mail == mail)
-        if (currentuser!=null&&currentuser!=''&&currentuser!=undefined) {
-          setEmail(currentuser);
-          setK(true);
-          setZ(false);
-          localStorage.setItem('CurrentUser',JSON.stringify(currentuser) )
-          if(mail==data.AdminEmail)
-          localStorage.setItem('Auth','a')
-          else
-          localStorage.setItem('Auth','b')
-          dispatch(updateAuth(localStorage.getItem('Auth')))
-          dispatch(updateCurrentUser(currentuser))
-          console.log(localStorage.getItem('CurrentUser')) 
-          console.log(data.userAuth)
-          console.log(data.currentUser)
-          setIslogin(true)
-
-        } else {
+if (currentuser==null||currentuser==undefined) {
+if (firstNameValid && lastNameValid && phoneValid && mailValid && passwordValid && heightValid && weightValid && ageValid && pelvisValid && waistValid && chestValid && cityValid && genderValid) {
+  let customer = {
+    name: firstName,
+    lastName: lastName,
+    city: city,
+    mail: mail,
+    height: height,
+    gender: gender,
+    phone: phone,
+    password: password,
+    chest: chest,
+    waist: waist,
+    pelvis: pelvis,
+    customerWeights: customerWeights,
+    joinDate: joinDate
+  };
+  axios.post("http://localhost:5000/customer", customer)
+    .then(async res =>{
+      setK(true);
+      setZ(false);
+        console.log("שם  המשתמש נכנס למערכת");
+       await localStorage.setItem('CurrentUser',JSON.stringify(res.data))
+        console.log(localStorage.getItem('CurrentUser')) 
+        if(res.data.mail==data.AdminEmail)
+       await localStorage.setItem('Auth','a')
+        else
+       await localStorage.setItem('Auth','b')
+      await  dispatch(updateCurrentUser(res.data))
+       await dispatch(updateAuth(localStorage.getItem('Auth')))
+        console.log(data.currentUser)
+        if(data.userAuth=='a')  
+        props.isLog()
+        setIslogin(true)
+  })}
+        } 
+        else {
           setZ(true);
           setK(false);
+          console.log("שם  כבר קיים במערכת");
           }
       });
   }
-  const submit2 = () => {
+  const submit2 = () => { //הפונקציה בודקת אם המשתמש קיים וכן נותנת לו רמת הרשאה בהתאם למייל- לקוח או מדריכה
     axios.get("http://localhost:5000/customer")
-      .then(res => {
-        debugger
+      .then(async res => {
         let currentuser = res.data.find(c => c.mail == mail && c.password == password)
-        // console.log(res)
         if (currentuser!=null&&currentuser!=''&&currentuser!=undefined) {
           setEmail(currentuser);
           setX(true);
           setY(false);
-          localStorage.setItem('CurrentUser',JSON.stringify(currentuser)  )
-          // localStorage.setItem('CurrentUser',currentuser )
+        await  localStorage.setItem('CurrentUser',JSON.stringify(currentuser)  )
           console.log(localStorage.getItem('CurrentUser')) 
           if(mail==data.AdminEmail)
-          localStorage.setItem('Auth','a')
+        await  localStorage.setItem('Auth','a')
           else
-          localStorage.setItem('Auth','b')
-          dispatch(updateAuth(localStorage.getItem('Auth')))
-          dispatch(updateCurrentUser(currentuser))
-          console.log(data.userAuth)
-          console.log(data.currentUser)
-          setIslogin(true)
-
+        await  localStorage.setItem('Auth','b')
+        await  dispatch(updateCurrentUser(currentuser))
+        await  dispatch(updateAuth(localStorage.getItem('Auth')))
+        if(data.userAuth=='a')  
+        props.isLog()
+         setIslogin(true)
         }
         else {
           setY(true);
@@ -242,6 +219,12 @@ export function Login(props) {
   const signUp = () => {
     setLog(false);
   }
+  if(islogin&&data.currentUser!=null&&data.userAuth=='a')
+  return <Redirect from='/admin/dashboard' to='/admin/orders'></Redirect>
+ 
+  if(islogin&&data.currentUser!=null&&data.userAuth=='b')
+   return <Redirect from='/admin/dashboard' to='/admin/user'></Redirect>
+  
   return (
     <div >
       {k && <div class="ui success message">
@@ -304,9 +287,11 @@ export function Login(props) {
                   </Label> : null}
                   </GridItem>
                   <CardFooter>
+                 
                     {/* צריך לראות איך רואים את הליבל רק אם חוזר לי אמת מהפונקציה איך עושים? */}
-                  <a href="/admin/user"><Button color="primary" onClick={() =>submit2()}>אישור</Button></a> 
-                  {/* <Button color="primary" onClick={() => submit2() }>אישור</Button> */}
+                  {/* <a href="/admin/user"><Button color="primary" onClick={() =>submit2()}>אישור</Button></a> */}
+
+                  <Button color="primary" onClick={() => submit2() }>אישור</Button>
 
                   </CardFooter>
                 </GridContainer>
@@ -478,8 +463,8 @@ export function Login(props) {
               </CardBody>
 
               <CardFooter>
-             {/* <Button color="primary" onClick={() => submit1() }>אישור</Button> */}
-               <a href='/admin/user'><Button color="primary" onClick={() =>submit1()}>אישור</Button></a>
+             <Button color="primary" onClick={() => submit1() }>אישור</Button>
+               {/* <a href='/admin/user'><Button color="primary" onClick={() =>submit1()}>אישור</Button></a> */}
               </CardFooter>
             </div>}
           </Card>

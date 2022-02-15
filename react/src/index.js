@@ -27,6 +27,8 @@ import 'semantic-ui-css/semantic.min.css'
 import "assets/css/material-dashboard-react.scss?v=1.10.0";
 import { Provider } from 'react-redux'
 // import reducer from "./reducers/customer";
+// import {useDispatch} from 'react-redux'
+import { updateCurrentUser ,updateAuth} from "./actions/customer";
 import { customerReducer, productReducer, competitionFilesReducer, orderReducer, recipeRecipe, recommendedProductsReducer } from "./reducers/index";
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
@@ -37,6 +39,13 @@ const myStore = createStore(combineReducers({ customerReducer: customerReducer, 
   composeEnhancers(
     applyMiddleware(thunk))
 );
+if(localStorage.getItem('CurrentUser')!='undefined'&&localStorage.getItem('CurrentUser')!=null&&localStorage.getItem('CurrentUser')!=undefined)
+myStore.dispatch(updateCurrentUser(JSON.parse(localStorage.getItem('CurrentUser')) ))
+
+if(localStorage.getItem('Auth')==null||localStorage.getItem('Auth')=='undefined'||localStorage.getItem('Auth')==undefined){
+  localStorage.setItem('Auth','c')
+  myStore.dispatch(updateAuth(localStorage.getItem('Auth')))
+}
 
 ReactDOM.render(
   <React.StrictMode>

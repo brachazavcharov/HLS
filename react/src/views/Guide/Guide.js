@@ -120,37 +120,32 @@ axios.delete('http://localhost:5000/customer/'+id)
 }
 
    function reccomendProduct(prodId,custId,isChecked){
-    debugger
+     //המדריכה בוחרת ללקוח מוצרים מומלצים והפונקציה אחראית להכניס את כל 
+     //המוצרים המומלצים ללקוח זה למערך ומעדכנת אותם או לחילופין מוחקת מוצרים 
     let r ={}
     if(isChecked){
     if(arrReccomend?.find(x=>x.productId==prodId&&x.customerId==custId)==undefined){
     r.customerId = custId
     r.productId = prodId
-    // let data = JSON.stringify(r);
     axios.post('http://localhost:5000/recommendedProducts',r)
     .then(function (response) {
-      debugger
-      console.log(JSON.stringify(response.data));
       setArrReccomend(response.data)
     })
     .catch(function (error) {
       console.log(error);
     });
     }}
-    // setArrReccomendedProduct([...arrReccomendedProduct,id])
     else{
       let id = arrReccomend.find(x=>x.productId==prodId&&x.customerId==custId)._id
       if(id!=undefined){
       axios.delete('http://localhost:5000/recommendedProducts/'+id)
       .then(function (response) {
-        console.log(JSON.stringify(response.data));
         setArrReccomend(response.data)
       })
       .catch(function (error) {
         console.log(error);
       });}
     }
-    // setArrReccomendedProduct(arrReccomendedProduct.filter(x=>x!=id))
    }
 
    function updateWeight(e,id){
@@ -243,14 +238,14 @@ axios.delete('http://localhost:5000/customer/'+id)
                       <img src={dataProduct?.productArr[dataProduct.productArr?.findIndex(x=>x._id==item.productId)]?.img} style={{ width: "60px" }}/>
                      </div>:null))}
                      {arrOrders?.find(x=>x.customerId==i._id&&x.isConfirm==false)?<Button color="primary" onClick={()=>confirmOrder(i._id)}>אישור הזמנה</Button>:<h3>אין הזמנות ללקוח זה</h3>}
-                     {arrOrders?.find(x=>x.customerId==i._id&&(x.isConfirm==false||(x.isConfirm==true&&Math.round((Date.parse(new Date())-Date.parse(new Date(x.orderDate))) / (1000 * 60 * 60 * 24))<7)))==undefined?
-                    <> <h2 style={{color:'red'}}>התראה: אין ללקוח זה הזמנות יותר משבוע</h2>
-                    <button onClick={()=>deleteCust(i._id)}>הסר לקוח</button>
+                     {(arrOrders?.find(x=>x.customerId==i._id&&(x.isConfirm==false||(x.isConfirm==true&&Math.round((Date.parse(new Date())-Date.parse(new Date(x.orderDate))) / (1000 * 60 * 60 * 24))<28)))==undefined&&Math.round((Date.parse(new Date())-Date.parse(new Date(i.joinDate))) / (1000 * 60 * 60 * 24))>28)?
+                    <> <h2 style={{color:'red'}}>התראה: אין ללקוח זה הזמנות יותר מחודש</h2>
+                    <Button color="primary" onClick={()=>deleteCust(i._id)}>הסר לקוח</Button>
                     </>:null}
                       </>,
                       <>{dataProduct?.productArr?.map((item,key)=>(
                         <div key={key}>
-                        <h3>{item.name}<input type='checkbox' defaultChecked={()=>arrReccomend?.find(x=>x.customerId==i._id&&x.productId==item._id)?true:false} onChange={(e)=>reccomendProduct(item._id,i._id,e.target.checked)}/></h3>
+                        <h3>{item.name}<input type='checkbox' defaultChecked={arrReccomend?.find(x=>x.customerId==i._id&&x.productId==item._id)!=undefined?true:false} onChange={(e)=>reccomendProduct(item._id,i._id,e.target.checked)}/></h3>
                         <img src={item.img} style={{ width: "60px" }}/>
                         </div>
                       ))}
@@ -273,11 +268,7 @@ axios.delete('http://localhost:5000/customer/'+id)
                       {/* <Button type="submit" color="primary">שלח תפריט ללקוח</Button> */}
                       </>,<>
                       <h3>התחל צ'אט עם לקוח</h3>
-                      <button onClick={async()=>{await dispatch(updateChat(i._id,data?.AdminEmail)),setStartChat(true)}}><BsChatQuote/></button>
-                      {/* <button onClick={()=>{setMail(i.mail),setRoom(i._id),setStartChat(true)}}><BsChatQuote/></button> */}
-                      {/* <WelcomeScreen /> */}
-                      {/* <WelcomeScreen mail={i.mail} room={i._id}/> */}
-                      {/* <ChatScreen room={i._id} email={i.mail}></ChatScreen> */}
+                      <Button color="primary" onClick={async()=>{await dispatch(updateChat(i._id)),setStartChat(true)}}><BsChatQuote/></Button>
                       </>
                      ]
                     )

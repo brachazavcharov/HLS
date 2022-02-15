@@ -1,4 +1,6 @@
 const Customer = require("../models/customer");
+const Order = require("../models/order");
+const RecommendedProducts = require("../models/recommendedProducts");
 const getAll = async (req, res) => {
     console.log("get all")
     let customers = await Customer.find();
@@ -73,8 +75,13 @@ const deleteCustomer = async (req, res) => {
     let deleted = await Customer.findByIdAndRemove(id);
     if (!deleted)
         return res.status(404).send("There is no such customer");
-    return res.send(deleted);
+    Order.findOneAndDelete({customerId:id}).
+    then(r=>{
+        RecommendedProducts.findOneAndDelete({customerId:id}).
+        then(s=>{return res.send(deleted)})
+    })
 }
+
 module.exports = {
     getAll, getById, postCustomer, updateCustomer, deleteCustomer
 }

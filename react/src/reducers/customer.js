@@ -6,7 +6,6 @@ const initialState = {
     AdminEmail:"sarafremd@gmail.com",
     userAuth:localStorage.getItem('Auth'),
     currentUser:null,
-    email:null,
     room:'main'
 }
 export const customerReducer = (state = initialState, action) => {
@@ -56,8 +55,7 @@ export const customerReducer = (state = initialState, action) => {
                     debugger
                         return {
                             ...state,
-                            email: action.payload.email,
-                            room: action.payload.room
+                            room: action.payload
                         }
     }
     return state;

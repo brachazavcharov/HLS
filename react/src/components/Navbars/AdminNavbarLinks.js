@@ -50,7 +50,6 @@ export default function AdminNavbarLinks() {
   };
   const handleLogin = () =>{
     setRedirect(true);
-    localStorage.setItem('IsLogged', true);
   }
   const logOut = async () =>{
     // handleCloseProfile()
@@ -69,12 +68,17 @@ export default function AdminNavbarLinks() {
   // else
   if(isLogOut==true)
       return <Redirect from="/" to="/admin/dashboard" />
+
+   
+  const handleCloseLogin = (isLogin) => {
+    setRedirect(false);
+  };
   
   return (
     
     <div>
       <div className={classes.searchWrapper}>
-        {redirect == true && <Login />}
+        {redirect == true && <Login isLog={handleCloseLogin}/>}
         <CustomInput
           formControlProps={{
             className: classes.margin + " " + classes.search,
@@ -86,11 +90,11 @@ export default function AdminNavbarLinks() {
             },
           }}
         />
-        <Button color="white" aria-label="edit" justIcon round>
+        {/* <Button color="white" aria-label="edit" justIcon round>
           <Search />
-        </Button>
+        </Button> */}
       </div>
-      <Button
+      {/* <Button
         color={window.innerWidth > 959 ? "transparent" : "white"}
         justIcon={window.innerWidth > 959}
         simple={!(window.innerWidth > 959)}
@@ -101,9 +105,9 @@ export default function AdminNavbarLinks() {
         <Hidden mdUp implementation="css">
           <p className={classes.linkText}>בית</p>
         </Hidden>
-      </Button>
+      </Button> */}
       <div className={classes.manager}>
-        <Button
+        {/* <Button
           color={window.innerWidth > 959 ? "transparent" : "white"}
           justIcon={window.innerWidth > 959}
           simple={!(window.innerWidth > 959)}
@@ -119,7 +123,7 @@ export default function AdminNavbarLinks() {
               Notification
             </p>
           </Hidden>
-        </Button>
+        </Button> */}
        {redirect != true && <Poppers
           open={Boolean(openNotification)}
           anchorEl={openNotification}
@@ -142,38 +146,33 @@ export default function AdminNavbarLinks() {
             >
               <Paper>
                 <ClickAwayListener onClickAway={handleCloseNotification}>
-                  <MenuList role="menu">
+                  {/* <MenuList role="menu">
                     <MenuItem
                       onClick={handleCloseNotification}
                       className={classes.dropdownItem}
                     >
-                      Mike John responded to your email
                     </MenuItem>
                     <MenuItem
                       onClick={handleCloseNotification}
                       className={classes.dropdownItem}
                     >
-                      You have 5 new tasks
                     </MenuItem>
                     <MenuItem
                       onClick={handleCloseNotification}
                       className={classes.dropdownItem}
                     >
-                      You{"'"}re now friend with Andrew
                     </MenuItem>
                     <MenuItem
                       onClick={handleCloseNotification}
                       className={classes.dropdownItem}
                     >
-                      Another Notification
                     </MenuItem>
                     <MenuItem
                       onClick={handleCloseNotification}
                       className={classes.dropdownItem}
                     >
-                      Another One
                     </MenuItem>
-                  </MenuList>
+                  </MenuList> */}
                 </ClickAwayListener>
               </Paper>
             </Grow>
@@ -219,7 +218,7 @@ export default function AdminNavbarLinks() {
               <Paper>
                 <ClickAwayListener onClickAway={handleCloseProfile}>
                   <MenuList role="menu">
-                    <MenuItem
+                    {/* <MenuItem
                       onClick={handleCloseProfile}
                       className={classes.dropdownItem}
                     >
@@ -230,8 +229,8 @@ export default function AdminNavbarLinks() {
                       className={classes.dropdownItem}
                     >
                       הגדרות
-                    </MenuItem>
-                    <Divider light />
+                    </MenuItem> 
+                    <Divider light />*/}
                    <a href='/admin/dashboard'><MenuItem
                       onClick={logOut}
                       className={classes.dropdownItem}

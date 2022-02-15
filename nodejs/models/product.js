@@ -10,7 +10,7 @@ const productSchema = mongoose.Schema({
     },
     img: {
         type: String,
-        required: true,
+        // required: true,
         trim: true
     },
     // quantityInStock: {
@@ -22,7 +22,7 @@ const productSchema = mongoose.Schema({
     description: {
         type: String,
         required: true,
-        minLength: 5,
+        minLength: 2,
         maxLength: 50,
         lowercase: true,
         trim: true

@@ -2,6 +2,7 @@ import React,{useState} from 'react'
 import { useSelector, useDispatch } from "react-redux";
 import { updateCustomer,updateCurrentUser } from "../../actions/customer";
 import GridItem from "components/Grid/GridItem.js";
+import { Button } from 'semantic-ui-react';
 
 
 export default function UserDetails(){
@@ -25,6 +26,7 @@ export default function UserDetails(){
     }
     return(
         <>  
+        <h3>עריכת פרטים</h3>
         <form onSubmit={(e)=>{e.preventDefault()  
             initUser(e.target)}}>
          <input disabled={!isUpdate} defaultValue={data.currentUser?.name}  placeholder={data.currentUser?.name}></input>
@@ -33,9 +35,10 @@ export default function UserDetails(){
          <input disabled={!isUpdate} defaultValue={data.currentUser?.mail} placeholder={data.currentUser?.mail}></input>
          <input disabled={!isUpdate} defaultValue={data.currentUser?.phone} placeholder={data.currentUser?.phone}></input>
          <input disabled={!isUpdate} defaultValue={data.currentUser?.password} placeholder={data.currentUser?.password}></input>
-         {isUpdate?<button type='submit' onClick={()=>setIsUpdate(true)}>אישור</button>:null}
+         {isUpdate?<Button type='submit' color="purple" onClick={()=>setIsUpdate(true)}>אישור</Button>:null}
         </form>
-        <button type="button" onClick={()=>setIsUpdate(true)}>עדכן פרטים</button>
+        <br/>
+        <Button color="purple" onClick={()=>setIsUpdate(true)}>עדכן פרטים</Button>
         </>
     )
 }

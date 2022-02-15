@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllProducts } from "../../actions/product";
 import axios from 'axios';
+import { Button } from "semantic-ui-react";
 
 export default function Orders() {
   const [arrOrders, setArrOrders] = useState([]);
@@ -46,10 +47,10 @@ export default function Orders() {
         </div>:null
         //arrOrders?.find(x=>x.customerId==data?.currentUser?._id&&x.isConfirm==true&&new Date(x.orderDate).getMonth()==new Date().getMonth()&& new Date(x.orderDate).getDate > new Date().getDate()-7)==undefined?<h1>לא הזמנת מוצרים זמן רב</h1>:null
       ))}
-      {arrOrders?.find(x=>x.customerId==data?.currentUser?._id&&(x.isConfirm==false||(x.isConfirm==true&&Math.round((Date.parse(new Date())-Date.parse(new Date(x.orderDate))) / (1000 * 60 * 60 * 24))<7)))==undefined?
-      <h2 style={{color:'red'}}>התראה: לא הזמנת מוצרים יותר משבוע המדריכה עלולה להסיר אותך</h2>:null}
+      {(arrOrders?.find(x=>x.customerId==data?.currentUser?._id&&(x.isConfirm==false||(x.isConfirm==true&&Math.round((Date.parse(new Date())-Date.parse(new Date(x.orderDate))) / (1000 * 60 * 60 * 24))<28)))==undefined&&Math.round((Date.parse(new Date())-Date.parse(new Date(data?.currentUser?.joinDate))) / (1000 * 60 * 60 * 24))>28)?
+      <h3 style={{color:'red',marginRight:"320pt"}}>התראה: לא הזמנת מוצרים יותר מחודש המדריכה עלולה להסיר אותך</h3>:null}
       {arrOrders?.find(x=>x.customerId==data?.currentUser?._id&&x.isConfirm==true)?<>
-      <button onClick={()=>setShowOld(!showOld)}>{showOld?'הסתר':'הצג הזמנות ישנות שלך'}</button>
+      <Button color="purple" onClick={()=>setShowOld(!showOld)}>{showOld?'הסתר':'הצג הזמנות ישנות שלך'}</Button>
       {showOld?<>
       {arrOrders?.map((item, key) => (
         item.customerId==data?.currentUser?._id&&item.isConfirm==true?

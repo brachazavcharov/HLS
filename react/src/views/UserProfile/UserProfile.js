@@ -17,7 +17,8 @@ import Chat from '../Chat/WelcomeScreen'
 import { BsChatQuote } from 'react-icons/bs';
 import { updateCustomer,updateCurrentUser,getAllCustomers,updateChat} from "../../actions/customer";
 import { Redirect } from 'react-router';
-
+import { Button } from "semantic-ui-react";
+import './profile.css';
 
 const styles = {
     cardCategoryWhite: {
@@ -66,12 +67,13 @@ export default function UserProfile() {
         <GridContainer>
               <GridItem  xs={12} sm={4} md={4} lg={4}><Details/></GridItem>
               <GridItem  xs={12} sm={4} md={4} lg={12}><Diagram/></GridItem>
-              <GridItem  xs={12} sm={4} md={4} lg={4}><Weight/></GridItem>
-              <GridItem  xs={12} sm={4} md={4} lg={4}><Bmi/></GridItem>
-              <GridItem  xs={12} sm={4} md={4} lg={12}><Orders/></GridItem>
+              <h6 class="bmi" ><Bmi/></h6>
+              <GridItem class="weight" xs={12} sm={4} md={4} lg={4}><Weight/></GridItem>
+              <GridItem class="orders" xs={12} sm={4} md={4} lg={12}><Orders/></GridItem>
               <GridItem  xs={12} sm={4} md={4} lg={12}><Menu/></GridItem>
               <GridItem  xs={12} sm={4} md={4} lg={12}>
-              <button onClick={async()=>{await dispatch(updateChat(data?.currentUser?._id,data?.currentUser?.mail)),setStartChat(true)}}><BsChatQuote/>התחל צ'אט עם המדריכה</button>
+                <br/>
+              <Button color="purple" onClick={async()=>{await dispatch(updateChat(data?.currentUser?._id)),setStartChat(true)}}><BsChatQuote/>התחל צ'אט עם המדריכה</Button>
               </GridItem>
         </GridContainer>
     )

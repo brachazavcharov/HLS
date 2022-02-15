@@ -41,27 +41,27 @@ export default function Admin({ ...rest }) {
       }
         return null;
       })}
-      <Redirect from="/admin" to="/admin/dashboard" />
+        <Redirect from="/admin" to="/admin/dashboard" />
     </Switch>
   );
 
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    debugger
-    if(localStorage.getItem('Auth')==null||localStorage.getItem('Auth')=='undefined'||localStorage.getItem('Auth')==undefined){
-          localStorage.setItem('Auth','c')
-          dispatch(updateAuth(localStorage.getItem('Auth')))
-    }
+  // useEffect(() => {
+  //   debugger
+  //   if(localStorage.getItem('Auth')==null||localStorage.getItem('Auth')=='undefined'||localStorage.getItem('Auth')==undefined){
+  //         localStorage.setItem('Auth','c')
+  //         dispatch(updateAuth(localStorage.getItem('Auth')))
+  //   }
 
-   },[localStorage.getItem('Auth')] )
+  // },[localStorage.getItem('Auth')] )
 
-   useEffect(() => {
-    debugger
-    if(data.currentUser==null&&localStorage.getItem('CurrentUser')!='undefined'&&localStorage.getItem('CurrentUser')!=null&&localStorage.getItem('CurrentUser')!=undefined){
-          dispatch(updateCurrentUser(JSON.parse(localStorage.getItem('CurrentUser')) ))
-    }
-   },[localStorage.getItem('CurrentUser')] )
+  //  useEffect(() => {
+  //   debugger
+  //   if(data.currentUser==null&&localStorage.getItem('CurrentUser')!='undefined'&&localStorage.getItem('CurrentUser')!=null&&localStorage.getItem('CurrentUser')!=undefined){
+  //         dispatch(updateCurrentUser(JSON.parse(localStorage.getItem('CurrentUser')) ))
+  //   }
+  //  },[localStorage.getItem('CurrentUser')] )
   // styles
   const classes = useStyles();
   // ref to help us initialize PerfectScrollbar on windows devices

@@ -71,11 +71,11 @@ export const updateCurrentUser = (user) => {
                 payload: user
             }
         }
-        export const updateChat = (room,email) => {
+        export const updateChat = (room) => {
             debugger
                 return {      
                     type: actionTypes.UPDATE_CHAT,
-                    payload: {room: room, email: email}
+                    payload: room
                 }
             }
     

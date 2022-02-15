@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const competitionFilesSchema = mongoose.Schema({
     name: {
         type: String,
-        minLength: 2,
-        maxLength: 15,
+        // minLength: 2,
+        // maxLength: 15,
         lowercase: true,
         required: true,
         trim: true
@@ -15,15 +15,11 @@ const competitionFilesSchema = mongoose.Schema({
     details: {
         type: String,
         required: true,
-        minLength: 5,
-        maxLength: 50,
         lowercase: true,
         trim: true
     },
     prize: {
         type: String,
-        minLength: 2,
-        maxLength: 15,
         lowercase: true,
         trim: true,
         required: true

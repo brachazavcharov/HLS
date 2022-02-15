@@ -11,10 +11,11 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import React, { useEffect, useState } from 'react'
-import { getAllProducts } from '../../actions/product';
+import { getAllProducts ,deleteProduct,addProduct} from '../../actions/product';
 import { connect } from "react-redux";
 import {useDispatch,useSelector} from 'react-redux'
 import axios from 'axios';
+import { Button } from "semantic-ui-react";
 
  const styles = {
   cardCategoryWhite: {
@@ -50,12 +51,17 @@ const useStyles = makeStyles(styles);
 
 function TableList(props) {
 
-  const [arrReccomend,setArrReccomend]=useState([])
+  const [arrReccomend,setArrReccomend] = useState([])
+  const [name,setName]= useState()
+  const [description,setDescription] = useState()
+  const [img,setImg] = useState()
+  const [isAdd,setIsAdd] = useState(false)
   const dispatch = useDispatch();
   const data = useSelector((state) => state.customerReducer);
+  // const dataProduct = useSelector((state) => state.productReducer);
 
   const classes = useStyles();
-  useEffect(() => {
+  useEffect(async () => {
     console.log("use effect start");
     props.getAllProducts();
     console.log("use effect end");
@@ -66,9 +72,42 @@ function TableList(props) {
       setArrReccomend(response.data)
     })
     .catch(error=>console.log(error))
-    
-  
   }, []);
+
+  function addProductFunc(){
+    debugger
+
+    axios.post('http://localhost:5000/product',{name:name,description:description})
+    .then(r=>{
+      console.log(JSON.stringify(r.data));
+       const formData = new FormData()
+       formData.append('img', img)
+       axios.post("http://localhost:5000/product/"+r.data._id ,formData,{
+           "Content-Type": "form-data"
+         }).then(res => {
+           debugger
+           console.log(res)
+           dispatch(addProduct(res.data))
+           setIsAdd(false);
+       }).catch(err=>console.log(err))
+       //
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+
+  function removeProduct(id){
+
+axios.delete('http://localhost:5000/product/'+id)
+.then(r=>{
+  console.log(JSON.stringify(r.data));
+  dispatch(deleteProduct(id))
+})
+.catch(function (error) {
+  console.log(error);
+});
+  }
 
   const add = (e) => {
     debugger;
@@ -83,7 +122,6 @@ function TableList(props) {
           <CardHeader color="primary">
             <h4 className={classes.cardTitleWhite}>מוצרים</h4>
             <p className={classes.cardCategoryWhite}>
-              Here is a subtitle for this table
             </p>
           </CardHeader>
           <CardBody>
@@ -91,10 +129,18 @@ function TableList(props) {
               tableHeaderColor="primary"
               tableHead={["הסרה", "תיאור","שם מוצר" , "תמונה"]}
               tableData={
-                props.arr ?
-                  props.arr.map(i => {
+                 props.arr ?
+                 props.arr.map(i => {
                     return (
-                      [<div>{arrReccomend.find(x=>x.productId==i._id&&x.customerId==data?.currentUser?._id)!=undefined?<h2 style={{backgroundColor:'red',textAlign:'center',color:'white'}}>מוצר מומלץ</h2>:null}<input onClick={()=>{add(i)}} type="button" value="הוסף לסל"/></div>, i.description,i.name , <img src={i.img} />]
+                      [<div>
+                        {arrReccomend.find(x=>x.productId==i._id&&x.customerId==data?.currentUser?._id)!=undefined?<h2 style={{backgroundColor:'red',textAlign:'center',color:'white'}}>מוצר מומלץ</h2>:null}
+                        {data?.userAuth=='a'?<>
+                        <Button onClick={()=>removeProduct(i._id)}  color="purple">הסר מוצר</Button>
+                        {/* {isDelete?<h1>המוצר הוסר בהצלחה</h1>:null} */}
+                        </>:
+                        <Button onClick={()=>{add(i)}}   color="purple" type="button">הוסף לסל</Button>}
+                        </div>
+                        , i.description,i.name , <img src={i.img} />]
                     )
                   })
                   : null
@@ -102,6 +148,13 @@ function TableList(props) {
             />
           </CardBody>
         </Card>
+        {data?.userAuth=='a'?<GridItem>{isAdd==false?<Button  color="purple" onClick={()=>setIsAdd(true)}>הוסף מוצר</Button>:<>
+          <input onChange={(e)=>setName(e.target.value)} type="text" placeholder="הכנס שם מוצר"></input>
+          <input onChange={(e)=>setDescription(e.target.value)}  type="text" placeholder="הכנס תיאור מוצר"></input>
+          <lable>בחר תמונת מוצר</lable>
+          <input onChange={(e)=>setImg(e.target.files[0])}  type="file"></input>
+          <Button disabled={!name||!description||!img}  color="purple" onClick={()=>addProductFunc()}>אישור</Button></>}
+        </GridItem>:null}
       </GridItem>
       <GridItem xs={12} sm={12} md={12}>
       </GridItem>

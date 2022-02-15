@@ -5,7 +5,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 // core components
 import ChartistGraph from "react-chartist";
 import {
-  dailyWeightChart,
+  // dailyWeightChart,
   dailySalesChart,
   emailsSubscriptionChart,
   completedTasksChart,
@@ -25,7 +25,7 @@ import avatar from "assets/img/faces/marc.jpg";
 import 'semantic-ui-css/semantic.min.css';
 import { Form, Checkbox, Label } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { getAllCustomers, postCustomer } from "../../actions/customer";
+import { getAllCustomers, postCustomer ,updateCurrentUser} from "../../actions/customer";
 import axios from "axios";
 import styles1 from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 // import WeigthImg from './weightImg'
@@ -33,6 +33,7 @@ import WeigthImg from './uploadImgWeigth'
 import UserDetails from './userDetails'
 import MenuFunc from './menuDisplay'
 import Table from "components/Table/Table.js";
+import { useDispatch,useSelector } from "react-redux";
 
 const styles = {
   cardCategoryWhite: {
@@ -69,8 +70,54 @@ const useStyles = makeStyles(styles,styles1);
 
 export default function UserDiagram(){
 
+  const data= useSelector((state) => state.customerReducer);
 
-let arrWeigth = dailyWeightChart?.data.series[0];
+  let  arr = data?.currentUser?.customerWeights
+  
+  var delays = 80,
+  durations = 500;
+
+  const dailyWeightChart = {
+    data: {
+      //good
+     labels:arr?.map(x=>new Date(x.date).toUTCString())?.slice(arr.length - 7, arr.length),
+     series: [arr?.map(x=>x.currentWeight)?.slice(arr.length - 7, arr.length)],
+    },
+    // for animation
+    animation: {
+      draw: function (data) {
+        if (data.type === "line" || data.type === "area") {
+          data.element.animate({
+            d: {
+              begin: 600,
+              dur: 700,
+              from: data.path
+                .clone()
+                .scale(1, 0)
+                .translate(0, data.chartRect.height())
+                .stringify(),
+              to: data.path.clone().stringify(),
+              easing: Chartist.Svg.Easing.easeOutQuint,
+            },
+          });
+        } else if (data.type === "point") {
+          data.element.animate({
+            opacity: {
+              begin: (data.index + 1) * delays,
+              dur: durations,
+              from: 0,
+              to: 1,
+              easing: "ease",
+            },
+          });
+        }
+      },
+    },
+  };
+  
+let arrWeigth = dailyWeightChart?.data?.series[0];
+let arrDates = dailyWeightChart.data.labels
+
 let options = {
   lineSmooth: Chartist.Interpolation.cardinal({
     tension: 0,
@@ -85,24 +132,16 @@ let options = {
     left: 0,
   },
 }
-let arrDates = dailyWeightChart?.data.labels
 
 const classes = useStyles();
 
-const diff = Date.parse(new Date()) - Date.parse(arrDates[arrDates.length-1]) 
-var diffDays = Math.round(diff / (1000 * 60 * 60 * 24));
 
-// useEffect(() => {
-// alert(JSON.stringify(dailyWeightChart.data) )
-// alert(JSON.stringify(arrWeigth) )
-// alert(JSON.stringify(arrDates) )
-// alert(JSON.stringify(diffDays) )
-// }, )
+const diff = Date.parse(new Date()) - Date.parse(arrDates[arrDates?.length-1]) 
+var diffDays = Math.round(diff / (1000 * 60 * 60 * 24));
 
 
   return(
     <>
-    {/* <h1>This is Profile Component!</h1> */}
     <GridContainer>
         <GridItem xs={12} sm={12} md={4}>
           <Card chart>

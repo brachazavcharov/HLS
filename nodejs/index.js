@@ -16,7 +16,7 @@ const chat = require("./routes/chat");
 
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://localhost:27017/HLS")
+mongoose.connect("mongodb://localhost:27017/HLS",{useFindAndModify:true})
     .then(() => { console.log("connected to mongo") })
     .catch(error => console.error(error));
 const app = express();

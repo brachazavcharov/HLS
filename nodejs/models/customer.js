@@ -70,6 +70,7 @@ const customerSchema = mongoose.Schema({
     joinDate: {
         type: Date,
         value:new Date(),
+        default: new Date(),
         required: [true, "enter a join date"]
     },
     customerWeights: {

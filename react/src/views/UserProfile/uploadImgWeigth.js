@@ -2,6 +2,7 @@ import React,{useState,useEffect} from 'react';
 import axios from 'axios';
 import { useSelector, useDispatch } from "react-redux";
 import { updateCustomer,updateCurrentUser } from "../../actions/customer";
+import { Button } from 'semantic-ui-react';
 
 
 export default function FilesUpload() {
@@ -50,11 +51,12 @@ useEffect(async () => {
                        <img src={data?.currentUser?.weightImg?.currentImg} style={{ width: "200px" }} /></>:
                     <form onSubmit={(e)=>onSubmit(e)}>
                         <div className="form-group">
-                            {!isChooseImg?<input type="file" onChange={(e)=>onFileChange(e)} />:null}
+                            <h3>בחירת תמונת משקל</h3>
+                            {!isChooseImg?<input type="file" className="fileUpload" onChange={(e)=>onFileChange(e)} />:null}
                             <img src={weightImg?URL.createObjectURL(weightImg):""} style={{ width: "200px" }} />
                         </div>
                         <div className="form-group">
-                           {weightImg&&!isChooseImg?<button disabled={weightImg?false:true} className="btn btn-primary" type="submit">שלח תמונה למדריכה</button>:null}
+                           {weightImg&&!isChooseImg?<Button disabled={weightImg?false:true}color="purple" className="btn btn-primary" type="submit">שלח תמונה למדריכה</Button>:null}
                             {isChooseImg?<h2>תמונת המשקל נשלחה למדריכה</h2>:null}
                            
                         </div>
